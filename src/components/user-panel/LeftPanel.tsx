@@ -22,13 +22,17 @@ export function LeftPanel({ panel, setPanel }: Props) {
 
     const options = Object.values(SIDE_OPTIONS).map((option, index) => {
         const isEnabled = option === panel
+        const isUnread = option === SIDE_OPTIONS.INBOX
+
         return (
             <li
                 key={index}
                 data-option={option}
                 aria-current={isEnabled}
+                className="flex items-center p-3 text-sm text-slate-400 font-semibold cursor-pointer aria-[current=true]:text-slate-700 aria-[current=true]:font-extrabold aria-[current=true]:bg-indigo-600 aria-[current=true]:text-white bg-slate-100 h-[40px] rounded-lg"
                 onClick={handleClick}>
                 {option}
+                {isUnread && <div className="bg-pink-500 w-[6px] h-[6px] rounded-full translate-x-1 translate-y-[-4px]" />}
             </li>
         )
     })
@@ -47,14 +51,14 @@ export function LeftPanel({ panel, setPanel }: Props) {
                 </div>
             </div>
 
-            <div className="">
-                <ul>
+            <div className="w-full h-full p-6 mt-6">
+                <ul className="flex flex-col gap-2">
                     {options}
                 </ul>
             </div>
 
-            <div className="">
-                <button onClick={handleExit} className="flex items-center leading-none line gap-2 border-solid border-2 text-sm border-slate-200 h-[40px] rounded-md px-4 mb-6 text-slate-600 font-semibold hover:bg-slate-100">
+            <div className="w-full px-6">
+                <button onClick={handleExit} className="flex items-center justify-center leading-none line gap-2 border-solid border-2 text-sm border-slate-200 h-[40px] w-full rounded-md mb-6 text-slate-600 font-semibold hover:bg-slate-100">
                     <LogoutIcon /> Exit
                 </button>
             </div>
