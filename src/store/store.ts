@@ -8,6 +8,7 @@ export interface Store {
     user: User | undefined
 
     setAppState(value: APP_STATE): void
+    setUser(value: User | undefined): void
 }
 
 const KUKAI_EMBED = new KukaiEmbed({ net: Networks.ghostnet, icon: false, enableLogging: true })

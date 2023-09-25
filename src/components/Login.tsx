@@ -5,13 +5,14 @@ import { APP_STATE } from "../types/types"
 export function Login() {
     const kukaiEmbed = useStore(store => store.kukaiEmbed)
     const appState = useStore(store => store.appState)
+    const setUser = useStore(store => store.setUser)
 
     const isLoading = appState === APP_STATE.LOADING
 
     async function handleClick() {
         try {
-            const loginResponse = await kukaiEmbed.login()
-            console.log(loginResponse)
+            const user = await kukaiEmbed.login()
+            setUser(user)
         } catch (error: any) {
             console.log(error)
         }
