@@ -1,59 +1,16 @@
+import { useStore } from "../../store/store"
 import { formatAddress } from "../../utils/text-utils"
 
-const SAMPLE_MESSAGES = [
-    {
-        by: 'tz2XdZQhhoCr5tWD1rP6v7PyQ9HUhBfw2EWE',
-        description: 'Hey, did you know that ants do not have ears?',
-        id: 'abc',
-        isRead: false,
-        title: 'My first message',
-    },
-    {
-        by: 'tz2XdZQhhoCr5tWD1rP6v7PyQ9HUhBfw2xtz',
-        description: 'Did you know that ants can become zombies? Testing a second line here.',
-        id: 'def',
-        isRead: true,
-        title: 'Ants can become zombies',
-    },
-    {
-        by: 'tz2XdZQhhoCr5tWD1rP6v7PyQ9HUhBfw2EWE',
-        description: 'Hey, did you know that ants do not have ears?',
-        id: 'hij',
-        isRead: false,
-        title: 'My first message',
-    },
-    {
-        by: 'tz2XdZQhhoCr5tWD1rP6v7PyQ9HUhBfw2xtz',
-        description: 'Did you know that ants can become zombies?',
-        id: 'klm',
-        isRead: true,
-        title: 'Ants can become zombies',
-    },
-    {
-        by: 'tz2XdZQhhoCr5tWD1rP6v7PyQ9HUhBfw2EWE',
-        description: 'Hey, did you know that ants do not have ears?',
-        id: 'nop',
-        isRead: false,
-        title: 'My first message',
-    },
-    {
-        by: 'tz2XdZQhhoCr5tWD1rP6v7PyQ9HUhBfw2xtz',
-        description: 'Did you know that ants can become zombies?',
-        id: 'qrs',
-        isRead: true,
-        title: 'Ants can become zombies',
-    },
-]
-
 export function Inbox() {
+    const inbox = useStore(store => store.inbox)
 
-    const messages = SAMPLE_MESSAGES.map(({ title, description, by, id }) => {
+    const messages = inbox.map(({ title, message, fromAddress, id }) => {
         return (
             <div key={id} className="py-2 px-3 bg-slate-50 rounded-xl">
                 <h3 className="font-bold text-slate-600 text-[15px] leading-0">{title}</h3>
-                <p className="text-sm leading-6 font-medium text-slate-500">{description}</p>
+                <p className="text-sm leading-6 font-medium text-slate-500">{message}</p>
                 <div className="flex text-xs mt-2 font-semibold text-slate-300 justify-start">
-                    <span>by &nbsp;<b>{formatAddress(by)}</b></span>
+                    <span>by &nbsp;<b>{formatAddress(fromAddress)}</b></span>
                 </div>
             </div>
         )

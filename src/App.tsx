@@ -1,12 +1,14 @@
 
-import { Login } from "./components/Login"
-import { UserPanel } from "./components/user-panel/UserPanel"
-import { useWallet } from "./hooks/use-kukai-embed"
-import { useStore } from "./store/store"
+import { Login } from "./components/Login";
+import { UserPanel } from "./components/user-panel/UserPanel";
+import { useDatabase } from "./hooks/use-database";
+import { useWallet } from "./hooks/use-kukai-embed";
+import { useStore } from "./store/store";
 
 export default function App() {
   const user = useStore(store => store.user)
   useWallet()
+  useDatabase()
 
   const hasUser = Boolean(user)
 

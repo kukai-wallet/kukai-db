@@ -1,14 +1,38 @@
+import { addDoc, collection, getFirestore } from "firebase/firestore"
 import { FormEvent, useState } from "react"
+import { useStore } from "../../store/store"
+import { Message } from "../../types/types"
 
 export function Compose() {
+    const user = useStore(store => store.user)
     const [canSubmit, setCanSubmit] = useState(false)
 
-    function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
-        // const { message, title, to } = e.currentTarget.elements as any
+        const { message, title, to } = e.currentTarget.elements as any
+        const db = getFirestore()
 
-        e.currentTarget.reset()
+        const newMessage: Omit<Message, 'id'> = {
+            message: message.value,
+            title: title.value,
+            toAddress: to.value,
+            fromAddress: user!.pkh,
+            isRead: false,
+            timestamp: new Date().toISOString()
+        }
+
+        try {
+            await addDoc(collection(db, 'messages'), newMessage)
+            console.log('db::write')
+
+            to.value = ''
+            message.value = ''
+            title.value = ''
+        } catch (error: any) {
+            console.warn(error)
+        }
+
     }
 
     return (

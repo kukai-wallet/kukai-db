@@ -3,16 +3,42 @@ import { useStore } from "../../store/store"
 import { formatAddress } from "../../utils/text-utils"
 import { SIDE_OPTIONS } from "./UserPanel"
 import { LogoutIcon } from "../../icons/Icons"
+import { Message } from "../../types/types"
 
 interface Props {
     panel: string
     setPanel: Dispatch<SetStateAction<SIDE_OPTIONS>>
 }
 
+interface FunctionProps {
+    option: SIDE_OPTIONS
+    inbox: Message[]
+    sent: Message[]
+}
+
+function getCount({ option, inbox, sent }: FunctionProps) {
+    if (option === SIDE_OPTIONS.COMPOSE) {
+        return 0
+    }
+
+    return option === SIDE_OPTIONS.INBOX ? inbox.length : sent.length
+}
+
+function getHasUnread({ option, inbox }: Omit<FunctionProps, 'sent'>) {
+    if (option !== SIDE_OPTIONS.INBOX) {
+        return false
+    }
+
+    return inbox.some(o => !o.isRead)
+}
+
 export function LeftPanel({ panel, setPanel }: Props) {
     const user = useStore(store => store.user)!
     const kukaiEmbed = useStore(store => store.kukaiEmbed)
+    const inbox = useStore(store => store.inbox)
+    const sent = useStore(store => store.sent)
     const setUser = useStore(store => store.setUser)
+
     const addressInitials = user.pkh.substring(0, 3)
 
     function handleClick(e: MouseEvent<HTMLLIElement>) {
@@ -22,7 +48,9 @@ export function LeftPanel({ panel, setPanel }: Props) {
 
     const options = Object.values(SIDE_OPTIONS).map((option, index) => {
         const isEnabled = option === panel
-        const isUnread = option === SIDE_OPTIONS.INBOX
+        const isUnread = getHasUnread({ option, inbox })
+        const count = getCount({ option, inbox, sent })
+        const showCount = Boolean(count)
 
         return (
             <li
@@ -31,7 +59,7 @@ export function LeftPanel({ panel, setPanel }: Props) {
                 aria-current={isEnabled}
                 className="flex items-center p-3 text-sm text-slate-400 font-semibold cursor-pointer aria-[current=true]:text-slate-700 aria-[current=true]:font-extrabold aria-[current=true]:bg-indigo-600 aria-[current=true]:text-white bg-slate-100 h-[40px] rounded-lg"
                 onClick={handleClick}>
-                {option}
+                {option} {showCount && `(${count})`}
                 {isUnread && <div className="bg-pink-500 w-[6px] h-[6px] rounded-full translate-x-1 translate-y-[-4px]" />}
             </li>
         )
